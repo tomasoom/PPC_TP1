@@ -25,9 +25,10 @@ public class Main {
     public static float EstimatePi(int nThrows){
         int cores = Runtime.getRuntime().availableProcessors();
         Thread[] threads = new Thread[cores];
-        int[] throwsLandedInsideCircle = new int[1];
-        throwsLandedInsideCircle[0] = 0;
-        int[] throwsLandedInsideSquare = new int[1];
+        int[] throwsLandedInsideCircle = new int[cores];
+        int throwsLandedInsideCircleF = 0;
+        int[] throwsLandedInsideSquare = new int[cores];
+        int throwsLandedInsideSquareF = 0;
         throwsLandedInsideSquare[0] = 0;
         float ePI;
 
@@ -45,9 +46,9 @@ public class Main {
 
                 for(int i = start; i < end; i++){
                     if(CheckIfInsideCirle(ThrowDart())){
-                        throwsLandedInsideCircle[0]++;
+                        throwsLandedInsideCircle[t]++;
                     }
-                    throwsLandedInsideSquare[0]++;
+                    throwsLandedInsideSquare[t]++;
 
                 }
             } );
@@ -64,10 +65,15 @@ public class Main {
             }
         }
 
-        ePI = (4*(throwsLandedInsideCircle[0]/(float) nThrows));
+        for(int insideCircle : throwsLandedInsideCircle){
+            throwsLandedInsideCircleF += insideCircle;
+        }
 
+        for(int insideSquare : throwsLandedInsideSquare){
+            throwsLandedInsideSquareF += insideSquare;
+        }
+        ePI = (4*(throwsLandedInsideCircleF/(float) nThrows));
         return ePI;
-
     }
 }
 
